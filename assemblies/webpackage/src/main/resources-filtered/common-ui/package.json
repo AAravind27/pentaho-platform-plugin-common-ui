@@ -371,6 +371,42 @@
           }
         }
       },
+      
+      "pentaho/visual/models/Boxplot": {
+        "base": "pentaho/visual/models/CategoricalContinuousAbstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Boxplot"
+          }
+        }
+      },
+
+      "pentaho/visual/models/Bullet": {
+        "base": "pentaho/visual/models/Abstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Bullet"
+          }
+        }
+      },
+
+      "pentaho/visual/models/Treemap": {
+        "base": "pentaho/visual/models/Abstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Treemap"
+          }
+        }
+      },
+
+      "pentaho/visual/models/Waterfall": {
+        "base": "pentaho/visual/models/BarAbstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Waterfall"
+          }
+        }
+      },
 
       "pentaho/visual/models/MetricPointAbstract": {
         "base": "pentaho/visual/models/CartesianAbstract"
@@ -380,6 +416,14 @@
         "annotations": {
           "pentaho/visual/DefaultView": {
             "module": "pentaho/ccc/visual/Scatter"
+          }
+        }
+      },
+      "pentaho/visual/models/MetricLine": {
+        "base": "pentaho/visual/models/MetricPointAbstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/MetricLine"
           }
         }
       },
@@ -403,11 +447,27 @@
           }
         }
       },
+      "pentaho/visual/models/LineStacked": {
+        "base": "pentaho/visual/models/PointAbstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/LineStacked"
+          }
+        }
+      },
       "pentaho/visual/models/AreaStacked": {
         "base": "pentaho/visual/models/PointAbstract",
         "annotations": {
           "pentaho/visual/DefaultView": {
             "module": "pentaho/ccc/visual/AreaStacked"
+          }
+        }
+      },
+      "pentaho/visual/models/Dot": {
+        "base": "pentaho/visual/models/PointAbstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Dot"
           }
         }
       },

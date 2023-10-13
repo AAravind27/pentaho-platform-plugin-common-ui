@@ -1,5 +1,5 @@
 /*!
- * Copyright 2016 - 2021 Hitachi Vantara. All rights reserved.
+ * Copyright 2016 - 2023 Hitachi Vantara. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-define(function() {
+define(function () {
 
   "use strict";
 
@@ -39,7 +39,7 @@ define(function() {
   var numberFormatCache = {};
   var numberStyle = {
     group: " ",
-    abbreviations:    ["k", "M", "G", "T", "P", "E", "Z", "Y"],
+    abbreviations: ["k", "M", "G", "T", "P", "E", "Z", "Y"],
     subAbbreviations: ["m", "µ", "n", "p", "f", "a", "z", "y"]
   };
 
@@ -67,18 +67,18 @@ define(function() {
         deps: [
           "pentaho/type/ValidationError"
         ],
-        apply: function(ValidationError) {
+        apply: function (ValidationError) {
           return {
             // @override
-            validateOn: function(model) {
+            validateOn: function (model) {
               var errors = this.base(model);
-              if(errors !== null) {
+              if (errors !== null) {
                 return errors;
               }
 
               var isVisualKeyEf;
               var mapping = model.get(this);
-              if(!mapping.hasFields || (isVisualKeyEf = this.isVisualKeyEffective) === undefined) {
+              if (!mapping.hasFields || (isVisualKeyEf = this.isVisualKeyEffective) === undefined) {
                 return null;
               }
 
@@ -87,16 +87,16 @@ define(function() {
               var i = -1;
               var mappingFields = mapping.fields;
               var L = mappingFields.count;
-              while(++i < L) {
+              while (++i < L) {
                 var name = mappingFields.at(i).name;
 
                 // Must exist. Already validated by base.
                 var columnIndex = data.getColumnIndexById(name);
-                if(data.isColumnKey(columnIndex) !== isVisualKeyEf) {
+                if (data.isColumnKey(columnIndex) !== isVisualKeyEf) {
                   errors = [
                     // TODO: Localize.
                     new ValidationError(
-                      "Visual role '" + this.name + "' cannot be mapped to non-key field '" + name + "'.")
+                        "Visual role '" + this.name + "' cannot be mapped to non-key field '" + name + "'.")
                   ];
                 }
               }
@@ -115,6 +115,8 @@ define(function() {
         select: {
           module: [
             "pentaho/visual/models/Line",
+            "pentaho/visual/models/LineStacked",
+            "pentaho/visual/models/MetricLine",
             "pentaho/visual/models/BarLine"
           ]
         },
@@ -122,7 +124,8 @@ define(function() {
           props: {
             // . line
             lineWidth: {
-              defaultValue: 2
+              defaultValue: 2,
+              axisGrid: false,
             }
           }
         }
@@ -202,17 +205,17 @@ define(function() {
             legendShape: "circle",
 
             legendItemCountMax: 20,
-            legendSizeMax:      "30%",
-            legendOverflow:     "collapse",
+            legendSizeMax: "30%",
+            legendOverflow: "collapse",
 
-            legendPaddings:    0,
-            legendMargins:     0,
-            legendItemSize:    {height: 30},
+            legendPaddings: 0,
+            legendMargins: 0,
+            legendItemSize: {height: 30},
             // must left, right, ... to override the options set by the wrapper (width and height don't work)
             legendItemPadding: {left: 7.5, right: 7.5, top: 0, bottom: 0},
 
             // NOTE: needs to be set to slightly higher than 4 to look like 4...
-            legendTextMargin:  6,
+            legendTextMargin: 6,
 
             legendArea_lineWidth: 0, // reset viz wrapper style
             legendArea_strokeStyle: "#c0c0c0",
@@ -227,7 +230,7 @@ define(function() {
               scenes: {
                 item: {
                   // Trim label text
-                  labelText: function() {
+                  labelText: function () {
                     var text = this.base();
                     return getPvc().text.trimToWidthB(maxHorizontalTextWidth, text, this.vars.font, "..");
                   }
@@ -250,12 +253,12 @@ define(function() {
             tooltipOffset: 20,
 
             // Title
-            titleVisible:  true,
-            titleSize:     30,
+            titleVisible: true,
+            titleSize: 30,
             titlePosition: "top",
-            titleAlign:    "center",
-            titleAlignTo:  "page-center",
-            titleFont:     vizApiFont,
+            titleAlign: "center",
+            titleAlignTo: "page-center",
+            titleFont: vizApiFont,
 
             // Labels
             label_ibits: 0,
@@ -274,10 +277,10 @@ define(function() {
           "pentaho/environment",
           "pentaho/util/domWindow"
         ],
-        apply: function(environment, domWindow) {
+        apply: function (environment, domWindow) {
           return {
             extension: {
-              margins:  0,
+              margins: 0,
               paddings: 0,
 
               // Chart
@@ -314,23 +317,23 @@ define(function() {
               xAxisLabelRotationDirection: "clockwise",
               xAxisLabelDesiredAngles: [0, 40 * (Math.PI / 180)],
 
-              numericAxisTickFormatter: function(value, precision) {
+              numericAxisTickFormatter: function (value, precision) {
                 return getNumberFormatter(this.axis, precision, this.base)(value);
               },
 
-              timeSeriesAxisTickFormatter: function(value) {
+              timeSeriesAxisTickFormatter: function (value) {
                 // Use the Intl API to achieve localized date formatting.
 
                 // TODO: Needed by PDI/DET on Linux, due to SWT/WebKit version.
                 // Remove after PDI-19372 is done.
-                if(!supportsIntlDateTime) {
+                if (!supportsIntlDateTime) {
                   return this.format(value);
                 }
 
-                switch(this.base) {
+                switch (this.base) {
                   case MS_PER_DAY:
                   case MS_PER_WEEK:
-                    if(dayFormatCached == null) {
+                    if (dayFormatCached == null) {
                       // Empty array is to use the browser's default locale.
                       dayFormatCached = new Intl.DateTimeFormat(environment.locale || [], {
                         year: "numeric",
@@ -348,11 +351,11 @@ define(function() {
                     // in the order between month and year.
                     // So, for IE 11 (and below), just use the default Protovis format which should differ only in
                     // the used separator.
-                    if(domWindow && ("ActiveXObject" in domWindow)) {
+                    if (domWindow && ("ActiveXObject" in domWindow)) {
                       return this.format(value);
                     }
 
-                    if(monthFormatCached == null) {
+                    if (monthFormatCached == null) {
                       // Empty array is to use the browser's default locale.
                       monthFormatCached = new Intl.DateTimeFormat(environment.locale || [], {
                         year: "numeric",
@@ -372,7 +375,7 @@ define(function() {
               axisGrid: false,
               continuousAxisGrid: true,
 
-              axisGrid_lineWidth:   1,
+              axisGrid_lineWidth: 1,
               axisGrid_strokeStyle: "#CCC",
 
               // . rule
@@ -383,12 +386,12 @@ define(function() {
               axisTicks: true,
               axisMinorTicks: false,
               continuousAxisDesiredTickCount: 5,
-              continuousAxisLabelSpacingMin:  2, // 2em = 20px
+              continuousAxisLabelSpacingMin: 2, // 2em = 20px
 
-              axisTicks_lineWidth:   1,
+              axisTicks_lineWidth: 1,
               axisTicks_strokeStyle: "#999999",
-              xAxisTicks_height:     3, // Account for part of the tick that gets hidden by the rule
-              yAxisTicks_width:      3
+              xAxisTicks_height: 3, // Account for part of the tick that gets hidden by the rule
+              yAxisTicks_width: 3
             }
           };
         }
@@ -481,18 +484,18 @@ define(function() {
             sizeAxisOriginIsZero: true,
 
             // . dot
-            dot_lineWidth: function() {
+            dot_lineWidth: function () {
               // show nullShape
               var v = !this.panel.visualRoles.size.isBound() || this.getSize() != null ? 0 : this.delegate();
               return this.finished(v);
             },
             dot_strokeStyle: fillStyle2,
-            dot_shapeSize: function() {
+            dot_shapeSize: function () {
               var v = this.panel.visualRoles.size.isBound() ? this.delegate() : (5 * 5);
               return this.finished(v);
             },
 
-            dot_DefaultVisible: function() {
+            dot_DefaultVisible: function () {
               return this.finished(true);
             }
           }
@@ -503,14 +506,17 @@ define(function() {
       {
         priority: RULE_PRIO_VIZ_DEFAULT,
         select: {
-          module: "pentaho/ccc/visual/Scatter"
+          module: [
+            "pentaho/ccc/visual/Scatter",
+            "pentaho/ccc/visual/MetricLine",
+            "pentaho/ccc/visual/Dot"]
         },
         apply: {
           extension: {
             // Plot
 
             // . dot
-            dot_shapeRadius: function() {
+            dot_shapeRadius: function () {
               return this.finished(5);
             }
           }
@@ -548,13 +554,13 @@ define(function() {
         },
         apply: {
           extension: {
-            barSizeRatio:   0.92, // TODO: Remove when barSizeSpacing actually works
+            barSizeRatio: 0.92, // TODO: Remove when barSizeSpacing actually works
             barSizeSpacing: 2,
-            barSizeMin:     4,
-            barSizeMax:     150,
+            barSizeMin: 4,
+            barSizeMax: 150,
 
             // No stroke
-            bar_lineWidth: function() {
+            bar_lineWidth: function () {
               return this.finished(0);
             },
             bar_fillStyle: fillStyle1
@@ -562,7 +568,7 @@ define(function() {
         }
       },
 
-      // Line/Area
+      // Line/Area/Stacked Line
       {
         priority: RULE_PRIO_VIZ_DEFAULT,
         select: {
@@ -580,16 +586,16 @@ define(function() {
             xAxisGrid: true,
 
             // . centered grid lines
-            xAxisGrid_visible: function() {
-              if(this.panel.axes.base.isDiscrete()) {
+            xAxisGrid_visible: function () {
+              if (this.panel.axes.base.isDiscrete()) {
                 return this.index > 0;
               }
 
               return this.delegate();
             },
-            xAxisGrid_left: function() {
+            xAxisGrid_left: function () {
               var left = this.delegate();
-              if(this.panel.axes.base.isDiscrete()) {
+              if (this.panel.axes.base.isDiscrete()) {
                 var halfStep = this.panel.axes.base.scale.range().step / 2;
                 return left - halfStep;
               }
@@ -620,23 +626,23 @@ define(function() {
             // Plot
             // . dot
             // . on hover
-            pointDot_fillStyle:   function() {
+            pointDot_fillStyle: function () {
               var c = this.delegate();
               var scene = this.scene;
               var sign = this.sign;
 
-              if(sign.showsInteraction()) {
+              if (sign.showsInteraction()) {
 
-                if(sign.mayShowNotAmongSelected(scene)) {
+                if (sign.mayShowNotAmongSelected(scene)) {
 
-                  if(sign.mayShowActive(scene, true)) {
+                  if (sign.mayShowActive(scene, true)) {
                     // not selected & active
                     c = getPv().Color.names.darkgray.darker(2).alpha(0.8);
                   } else {
                     // not selected
                     c = getPvc().toGrayScale(c, -0.3);
                   }
-                } else if(sign.mayShowActive(scene, true)) {
+                } else if (sign.mayShowActive(scene, true)) {
                   // active || (active & selected)
                   c = "white";
                 }
@@ -646,17 +652,17 @@ define(function() {
               return this.finished(c);
             },
 
-            pointDot_strokeStyle: function() {
+            pointDot_strokeStyle: function () {
               var c = this.delegate();
               var scene = this.scene;
               var sign = this.sign;
 
-              if(sign.showsInteraction()) {
+              if (sign.showsInteraction()) {
 
                 // Not among selected
-                if(sign.mayShowNotAmongSelected(scene)) {
+                if (sign.mayShowNotAmongSelected(scene)) {
 
-                  if(sign.mayShowActive(scene, true)) {
+                  if (sign.mayShowActive(scene, true)) {
                     // not selected & active
                     c = getPv().Color.names.darkgray.darker(2).alpha(0.8);
                   } else {
@@ -668,7 +674,9 @@ define(function() {
 
               return this.finished(c);
             },
-            pointDot_lineWidth: function() { return this.finished(2); },
+            pointDot_lineWidth: function () {
+              return this.finished(2);
+            },
 
             // . line
             pointLine_ibits: 0,
@@ -750,7 +758,7 @@ define(function() {
         },
         apply: {
           extension: {
-            slice_innerRadiusEx: "60%"
+            // slice_innerRadiusEx: "60%"
           }
         }
       },
@@ -789,13 +797,15 @@ define(function() {
             yAxisSizeMax: 80, // shouldn't it be: maxHorizontalTextWidth ??
 
             // . dot
-            dot_lineWidth: function() {
+            dot_lineWidth: function () {
               // show nullShape
               var v = this.getSize() != null ? 0 : this.delegate();
               return this.finished(v);
             },
             dot_strokeStyle: fillStyle1,
-            dot_shapeRadius: function() { return this.finished(this.delegate()); },
+            dot_shapeRadius: function () {
+              return this.finished(this.delegate());
+            },
             dot_fillStyle: fillStyle1
           }
         }
@@ -819,9 +829,29 @@ define(function() {
 
             colorMode: "level",
 
-            slice_strokeStyle: function() { return this.finished("white"); },
-            slice_lineWidth: function() { return this.finished(2); },
+            slice_strokeStyle: function () {
+              return this.finished("white");
+            },
+            slice_lineWidth: function () {
+              return this.finished(2);
+            },
             slice_fillStyle: fillStyle1
+          }
+        }
+      },
+
+      // Waterfall
+      {
+        priority: RULE_PRIO_VIZ_DEFAULT,
+        select: {
+          module: "pentaho/ccc/visual/Waterfall"
+        },
+        apply: {
+          extension: {
+            rootCategoryLabel: "",
+            legendAreaVisible: true,
+            colorMode: "level",
+            axisGrid: true,
           }
         }
       },
@@ -863,10 +893,10 @@ define(function() {
         },
         apply: {
           extension: {
-            legendPosition:    "top",
-            legendAlign:       "left",
+            legendPosition: "top",
+            legendAlign: "left",
 
-            legendFont:        vizApiFont,
+            legendFont: vizApiFont,
             legendLabel_textStyle: "#666"
           }
         }
@@ -908,7 +938,9 @@ define(function() {
             // Plot
             // . dot
             dotsVisible: false,
-            dot_shapeRadius: function() { return this.finished(5); }
+            dot_shapeRadius: function () {
+              return this.finished(5);
+            }
           }
         }
       },
@@ -971,8 +1003,8 @@ define(function() {
             discreteAxisLabelSpacingMin: 0,
 
             // Disable "smart" Date value type on discrete cartesian axis formatting...
-            discreteAxisTickFormatter: function(value, absLabel) {
-              if(arguments.length > 2) {
+            discreteAxisTickFormatter: function (value, absLabel) {
+              if (arguments.length > 2) {
                 // Being called for discrete scale / Date formatting...
                 return String(value);
               }
@@ -1037,7 +1069,7 @@ define(function() {
     var useAbbrev = (base >= 1000);
     var key = useAbbrev + "|" + precision;
     var numberFormat = numberFormatCache[key];
-    if(!numberFormat) {
+    if (!numberFormat) {
       // #,0 A
       // #,0.0 A
       // #,0.00 A
@@ -1059,14 +1091,14 @@ define(function() {
   function fillStyle1() {
 
     var c = this.delegate();
-    if(c) {
+    if (c) {
       c = c.rgb();
 
       var iState = getInteractionState(this);
 
-      if(!iState.isActive && iState.isSelected < 0) {
+      if (!iState.isActive && iState.isSelected < 0) {
         c = getPv().color(notSelectedColor);
-      } else if(iState.isActive && iState.isSelected > -1) {
+      } else if (iState.isActive && iState.isSelected > -1) {
         // 20% darker
         c = c.hsl();
         c = c.lightness(c.l * (1 - 0.2));
@@ -1080,20 +1112,20 @@ define(function() {
   function fillStyle2() {
 
     var c = this.delegate();
-    if(c) {
+    if (c) {
       c = c.rgb();
 
       var iState = getInteractionState(this);
 
-      if(!iState.isActive) {
-        if(iState.isSelected < 0) {
+      if (!iState.isActive) {
+        if (iState.isSelected < 0) {
           // TODO: alpha value for non-selected items still under discussion by UX
           c = getPv().color(notSelectedColor);
           c = c.alpha(0.75);
         } else {
           c = c.alpha(0.5);
         }
-      } else if(iState.isActive && iState.isSelected > 0) {
+      } else if (iState.isActive && iState.isSelected > 0) {
         // 20% darker
         c = c.hsl();
         c = c.lightness(c.l * (1 - 0.2));
@@ -1107,14 +1139,14 @@ define(function() {
   function fillStyle3() {
 
     var c = this.delegate();
-    if(c) {
+    if (c) {
       c = c.rgb();
 
       var iState = getInteractionState(this);
 
-      if(!iState.isActive && iState.isSelected < 0) {
+      if (!iState.isActive && iState.isSelected < 0) {
         c = getPv().color(notSelectedColor);
-      } else if(iState.isActive && iState.isSelected > -1) {
+      } else if (iState.isActive && iState.isSelected > -1) {
         // 20% darker
         c = c.hsl();
         c = c.lightness(c.l * (1 - 0.2));
@@ -1129,7 +1161,7 @@ define(function() {
     var scene = context.scene;
 
     interactionState.isSelected = (!sign.showsSelection() || !scene.anySelected()) ? 0 : scene.isSelected() ? 1 : -1;
-    interactionState.isActive  = sign.mayShowActive(scene, true) ? 1 : 0;
+    interactionState.isActive = sign.mayShowActive(scene, true) ? 1 : 0;
 
     return interactionState;
   }

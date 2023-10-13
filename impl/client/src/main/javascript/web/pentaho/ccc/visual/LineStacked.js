@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2019 Hitachi Vantara. All rights reserved.
+ * Copyright 2023 Hitachi Vantara. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,40 +15,36 @@
  */
 define([
   "pentaho/module!_",
-  "./Abstract"
+  "./PointAbstract",
+  "./_trends"
 ], function (module, BaseView) {
 
   "use strict";
 
   return BaseView.extend(module.id, {
-    _cccClass: "TreemapChart",
+    _cccClass: "StackedLineChart",
 
-    _roleToCccRole: {
-      "rows": "category",
-      "multi": "multiChart",
-      "size": "size"
-    },
-
-    _genericMeasureCccVisualRole: "size",
-    _genericMeasureDiscrimCccVisualRole: "multiChart",
-
-    _multiRole: "multi",
-
-    _discreteColorRole: "rows",
+    _supportsTrends: true,
 
     _configureOptions: function () {
+
       this.base();
 
-      this.options.layoutMode = this.model.layoutMode;
+      var options = this.options;
+      var model = this.model;
 
-      if (this.model.viewSize){
-        this.options.valuesMask = this._configureValuesMask();
+      options.orientation = model.orientation;
+      options.direction = model.direction;
+
+
+      var shape = model.shape;
+      if (shape && shape === "none") {
+        options.dotsVisible = false;
+      } else {
+        options.dotsVisible = true;
+        options.dot_shape = shape;
       }
-    },
-
-    _configureValuesMask: function () {
-      return "{category} ({size})";
     }
-
-  }).implement(module.config);
+  })
+      .implement(module.config);
 });

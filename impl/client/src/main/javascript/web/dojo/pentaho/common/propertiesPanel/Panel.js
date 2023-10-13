@@ -1506,6 +1506,39 @@ define([
         this.discreteValues = this.maximum - this.minimum + 1;
       },
 
+      postCreate: function() {
+        this.slider = registry.byId(this.id);
+
+        // this.slider = new HorizontalSlider({
+        //       value:    this.value,
+        //       minimum:  this.minimum,
+        //       maximum:  this.maximum,
+        //       style:    "width: 100%",
+        //       intermediateChanges: true,
+        //       onChange: lang.hitch(this, function(value) { this.model.set('value',  value); })
+        //     });
+
+        // this.checkbox.placeAt(this.domNode, "first");
+
+        this.uiKeyNode = this.slider.focusNode;
+
+        this.inherited(arguments);
+      },
+
+      destroy: function() {
+
+        this.inherited(arguments);
+
+        // if(this.slider) {
+        //   this.slider.destroyRecursive();
+        //   this.slider = null;
+        // }
+
+        // Prevent leak
+        this._startupWidgets = null;
+        this._supportingWidgets = null;
+      },
+
       onChange: function() {
         this.model.set('value', this.value);
       }

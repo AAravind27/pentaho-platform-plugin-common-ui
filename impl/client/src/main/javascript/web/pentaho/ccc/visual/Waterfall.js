@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2019 Hitachi Vantara. All rights reserved.
+ * Copyright 2023 Hitachi Vantara. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,20 @@
 define([
   "pentaho/module!_",
   "./BarAbstract"
-], function(module, BaseView) {
+], function (module, BaseView) {
 
   return BaseView.extend(module.id, {
-    _cccClass: "WaterfallChart"
+    _cccClass: "WaterfallChart",
+
+    _configureOptions: function () {
+      this.base();
+
+      var options = this.options;
+      var model = this.model;
+
+      options.orientation = model.orientation;
+      options.direction = model.direction;
+    },
   })
   .implement(module.config);
 });

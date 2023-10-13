@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function() {
+(function () {
   /* globals requireCfg, CONTEXT_PATH, KARMA_RUN, SESSION_LOCALE, active_theme, ENVIRONMENT_CONFIG */
 
   /* eslint dot-notation: 0, require-jsdoc: 0 */
@@ -27,17 +27,17 @@
   var useDebug = true;
 
   // environment configured
-  if((typeof ENVIRONMENT_CONFIG !== "undefined" &&
+  if ((typeof ENVIRONMENT_CONFIG !== "undefined" &&
       ENVIRONMENT_CONFIG.paths !== undefined &&
       ENVIRONMENT_CONFIG.paths["common-ui"] !== undefined)) {
 
-    if(ENVIRONMENT_CONFIG.debug != null) {
+    if (ENVIRONMENT_CONFIG.debug != null) {
       useDebug = !!ENVIRONMENT_CONFIG.debug;
     }
 
     basePath = ENVIRONMENT_CONFIG.paths["common-ui"];
 
-  } else if(typeof CONTEXT_PATH !== "undefined") {
+  } else if (typeof CONTEXT_PATH !== "undefined") {
     useDebug = typeof document === "undefined" || document.location.href.indexOf("debug=true") > 0;
 
     // production
@@ -49,7 +49,7 @@
 
   baseUncompressedPath = basePath;
 
-  if(!useDebug) {
+  if (!useDebug) {
     basePath += "/compressed";
     useBundle = true;
   }
@@ -79,7 +79,7 @@
     "i18n", "data", "action", "type",
     "visual", "config", "environment",
     "debug", "ccc", "module", "platformBundle", "platformCore", "theme"
-  ].forEach(function(name) {
+  ].forEach(function (name) {
     requirePaths["pentaho/" + name] = basePath + "/pentaho/" + name;
   });
 
@@ -211,7 +211,7 @@
   requirePaths["common-ui/jquery-clean"] = basePath + "/jquery/jquery";
   requireShim["common-ui/jquery-clean"] = {
     exports: "$",
-    init: function() {
+    init: function () {
       return this.$.noConflict(true);
     }
   };
@@ -290,6 +290,24 @@
       "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/BarNormalizedHorizontal"}
     }
   };
+  requireModules["pentaho/visual/models/Waterfall"] = {
+    base: "pentaho/visual/models/BarAbstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Waterfall"}
+    }
+  };
+  requireModules["pentaho/visual/models/Boxplot"] = {
+    base: "pentaho/visual/models/CategoricalContinuousAbstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Boxplot"}
+    }
+  };
+  requireModules["pentaho/visual/models/Bullet"] = {
+    base: "pentaho/visual/models/Abstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Bullet"}
+    }
+  };
 
   requireModules["pentaho/visual/models/Sunburst"] = {
     base: "pentaho/visual/models/Abstract",
@@ -310,11 +328,24 @@
     }
   };
 
+  requireModules["pentaho/visual/models/Treemap"] = {
+    base: "pentaho/visual/models/Abstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Treemap"}
+    }
+  };
+
   requireModules["pentaho/visual/models/MetricPointAbstract"] = {base: "pentaho/visual/models/CartesianAbstract"};
   requireModules["pentaho/visual/models/Scatter"] = {
     base: "pentaho/visual/models/MetricPointAbstract",
     annotations: {
       "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Scatter"}
+    }
+  };
+  requireModules["pentaho/visual/models/MetricLine"] = {
+    base: "pentaho/visual/models/MetricPointAbstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/MetricLine"}
     }
   };
   requireModules["pentaho/visual/models/Bubble"] = {
@@ -329,6 +360,18 @@
     base: "pentaho/visual/models/PointAbstract",
     annotations: {
       "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Line"}
+    }
+  };
+  requireModules["pentaho/visual/models/LineStacked"] = {
+    base: "pentaho/visual/models/PointAbstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/LineStacked"}
+    }
+  };
+  requireModules["pentaho/visual/models/Dot"] = {
+    base: "pentaho/visual/models/PointAbstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Dot"}
     }
   };
   requireModules["pentaho/visual/models/AreaStacked"] = {
@@ -357,6 +400,8 @@
   requireModules["pentaho/ccc/visual/CategoricalContinuousAbstract"] = {base: "pentaho/ccc/visual/CartesianAbstract"};
 
   requireModules["pentaho/ccc/visual/BarAbstract"] = {base: "pentaho/ccc/visual/CategoricalContinuousAbstract"};
+  requireModules["pentaho/ccc/visual/Boxplot"] = {base: "pentaho/ccc/visual/CategoricalContinuousAbstract"};
+  requireModules["pentaho/ccc/visual/Bullet"] = {base: "pentaho/ccc/visual/Abstract"};
   requireModules["pentaho/ccc/visual/Bar"] = {base: "pentaho/ccc/visual/BarAbstract"};
   requireModules["pentaho/ccc/visual/BarHorizontal"] = {base: "pentaho/ccc/visual/BarAbstract"};
   requireModules["pentaho/ccc/visual/BarStacked"] = {base: "pentaho/ccc/visual/BarAbstract"};
@@ -365,6 +410,7 @@
   requireModules["pentaho/ccc/visual/BarNormalizedAbstract"] = {base: "pentaho/ccc/visual/BarAbstract"};
   requireModules["pentaho/ccc/visual/BarNormalized"] = {base: "pentaho/ccc/visual/BarNormalizedAbstract"};
   requireModules["pentaho/ccc/visual/BarNormalizedHorizontal"] = {base: "pentaho/ccc/visual/BarNormalizedAbstract"};
+  requireModules["pentaho/ccc/visual/Waterfall"] = {base: "pentaho/ccc/visual/BarAbstract"};
 
   requireModules["pentaho/ccc/visual/Sunburst"] = {base: "pentaho/ccc/visual/Abstract"};
   requireModules["pentaho/ccc/visual/Pie"] = {base: "pentaho/ccc/visual/Abstract"};
@@ -373,9 +419,12 @@
   requireModules["pentaho/ccc/visual/MetricPointAbstract"] = {base: "pentaho/ccc/visual/CartesianAbstract"};
   requireModules["pentaho/ccc/visual/Scatter"] = {base: "pentaho/ccc/visual/MetricPointAbstract"};
   requireModules["pentaho/ccc/visual/Bubble"] = {base: "pentaho/ccc/visual/MetricPointAbstract"};
+  requireModules["pentaho/ccc/visual/MetricLine"] = {base: "pentaho/ccc/visual/MetricPointAbstract"};
 
   requireModules["pentaho/ccc/visual/PointAbstract"] = {base: "pentaho/ccc/visual/CartesianAbstract"};
   requireModules["pentaho/ccc/visual/Line"] = {base: "pentaho/ccc/visual/PointAbstract"};
+  requireModules["pentaho/ccc/visual/LineStacked"] = {base: "pentaho/ccc/visual/PointAbstract"};
+  requireModules["pentaho/ccc/visual/Dot"] = {base: "pentaho/ccc/visual/PointAbstract"};
   requireModules["pentaho/ccc/visual/AreaStacked"] = {base: "pentaho/ccc/visual/PointAbstract"};
 
   requireModules["pentaho/ccc/visual/HeatGrid"] = {base: "pentaho/ccc/visual/CartesianAbstract"};
@@ -416,7 +465,7 @@
   // endregion
 
   // Copied by hand from /target/requireCfg.bundles.js
-  if(useBundle) {
+  if (useBundle) {
     requireCfg.bundles["pentaho/platformCore"] = [
       "pentaho/util/has",
       "pentaho/util/object",
@@ -678,6 +727,7 @@
       "pentaho/visual/models/BarNormalizedAbstract",
       "pentaho/visual/models/BarNormalized",
       "pentaho/visual/models/BarNormalizedHorizontal",
+      "pentaho/visual/models/Waterfall",
       "pentaho/visual/models/BarStacked",
       "pentaho/visual/models/BarStackedHorizontal",
       "pentaho/visual/models/types/ColorSet",
@@ -686,12 +736,18 @@
       "pentaho/visual/models/MetricPointAbstract",
       "pentaho/visual/models/types/SizeByNegativesMode",
       "pentaho/visual/models/mixins/ScaleSizeContinuous",
+      "pentaho/visual/models/Bullet",
       "pentaho/visual/models/Bubble",
       "pentaho/visual/models/Pie",
       "pentaho/visual/models/Donut",
+      "pentaho/visual/models/Treemap",
       "pentaho/visual/models/HeatGrid",
       "pentaho/visual/models/Line",
       "pentaho/visual/models/Scatter",
+      "pentaho/visual/models/Boxplot",
+      "pentaho/visual/models/MetricLine",
+      "pentaho/visual/models/LineStacked",
+      "pentaho/visual/models/Dot",
       "pentaho/visual/models/types/SliceOrder",
       "pentaho/visual/models/Sunburst",
       "pentaho/visual/models/all",
@@ -734,11 +790,15 @@
       "pentaho/ccc/visual/Boxplot",
       "pentaho/ccc/visual/MetricPointAbstract",
       "pentaho/ccc/visual/Bubble",
+      "pentaho/ccc/visual/Bullet",
       "pentaho/ccc/visual/Pie",
       "pentaho/ccc/visual/Donut",
       "pentaho/ccc/visual/HeatGrid",
       "pentaho/ccc/visual/Line",
       "pentaho/ccc/visual/Scatter",
+      "pentaho/ccc/visual/MetricLine",
+      "pentaho/ccc/visual/LineStacked",
+      "pentaho/ccc/visual/Dot",
       "pentaho/ccc/visual/Sunburst",
       "pentaho/ccc/visual/Treemap",
       "pentaho/ccc/visual/Waterfall",

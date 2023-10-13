@@ -15,13 +15,78 @@
  */
 define([
   "pentaho/module!_",
-  "./CategoricalContinuousAbstract"
-], function(module, BaseView) {
+  "./CategoricalContinuousAbstract",
+  "pentaho/data/TableView",
+  "cdf/lib/CCC/pvc",
+  "cdf/lib/CCC/def",
+], function (module, BaseView, DataView, pvc, def) {
 
   "use strict";
 
   return BaseView.extend(module.id, {
-    _cccClass: "BoxplotChart"
+    _cccClass: "BoxplotChart",
+
+    _roleToCccRole: {
+      "rows": "category",
+      "columns": "series",
+      "multi": "multiChart",
+      "minimum": "minimum",
+      "lowerQuartile": "lowerQuartil",
+      "median": "median",
+      "measures": "measures",
+      "upperQuartile": "upperQuartil",
+      "maximum": "maximum"
+    },
+
+    _update : function(event, action) {
+      this.base(event, action);
+      console.log("update function");
+    }
+
+    // _initData: function () {
+
+    //   var model = this.model;
+
+    //   var dataTable = model.data;
+    //   this._dataView = new DataView(dataTable);
+
+    //   this._dataView.getColumnRange(1);
+    //   var range = this._dataView.getColumnRange(1);
+    //   var min = range.min;
+    //   var max = range.max;
+
+    //   // dataTable.addColumn(min);
+
+    //   this.options.visualRoles = {
+    //     // median:       'value',
+    //     // lowerQuartil: 'value2',
+    //     // upperQuartil: 'value3',
+    //     minimum: min,
+    //     maximum: max
+    //   }
+    // },
+
+    // _configureOptions: function () {
+    //   //NOOP
+    // },
+
+    // _renderCore: function () {
+    //   this.__disposeChart();
+
+    //   this._chart = this._createChart(pvc[this._cccClass]);
+    //   this._chart.setData(this._dataView.toJsonCda(), { crosstabMode: false });
+
+    //   var isPaginated = this.options.multiChartOverflow === "page";
+    //   if (isPaginated) {
+    //     this._chart.renderPages();
+    //   } else {
+    //     this._chart.render();
+    //   }
+
+    //   return null;
+    // },
+
+
   })
-  .implement(module.config);
+    .implement(module.config);
 });

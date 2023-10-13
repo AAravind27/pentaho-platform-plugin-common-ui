@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2023 Hitachi Vantara. All rights reserved.
+ * Copyright 2023 Hitachi Vantara. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,10 @@
  */
 define([
   "pentaho/module!_",
-  "./Pie",
+  "./PointAbstract",
+  "./types/Orientation",
   "pentaho/i18n!./i18n/model"
-], function(module, BaseModel, bundle) {
+], function (module, BaseModel, Orientation, bundle) {
 
   "use strict";
 
@@ -25,23 +26,22 @@ define([
     $type: {
       id: module.id,
 
-      label: "Donut",
+      v2Id: "ccc_Dot",
+      category: "dotchart",
 
-      props:[
+      label: "Dot Chart",
+
+      props: [
         {
-          name:"explodedSliceRadius",
-          valueType: "number",
-          defaultValue: "2"
+          name: "orientation",
+          valueType: Orientation,
+          domain: ["horizontal", "vertical"],
+          isRequired: false,
+          defaultValue: "vertical"
         },
-        {
-          name:"slice_innerRadiusEx",
-          label:"Inner Radius",
-          valueType: "number",
-          defaultValue: "50"
-        }
       ]
     }
   })
-  .localize({$type: bundle.structured.Donut})
-  .configure();
+      .localize({$type: bundle.structured.Dot})
+      .configure();
 });

@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2019 Hitachi Vantara. All rights reserved.
+ * Copyright 2023 Hitachi Vantara. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,40 +15,22 @@
  */
 define([
   "pentaho/module!_",
-  "./Abstract"
-], function (module, BaseView) {
+  "./MetricPointAbstract"
+], function(module, BaseView) {
 
   "use strict";
 
   return BaseView.extend(module.id, {
-    _cccClass: "TreemapChart",
-
-    _roleToCccRole: {
-      "rows": "category",
-      "multi": "multiChart",
-      "size": "size"
-    },
-
-    _genericMeasureCccVisualRole: "size",
-    _genericMeasureDiscrimCccVisualRole: "multiChart",
-
-    _multiRole: "multi",
-
-    _discreteColorRole: "rows",
-
+    _cccClass: "MetricLineChart",
     _configureOptions: function () {
+
       this.base();
 
-      this.options.layoutMode = this.model.layoutMode;
+      var options = this.options;
+      var model = this.model;
 
-      if (this.model.viewSize){
-        this.options.valuesMask = this._configureValuesMask();
-      }
-    },
-
-    _configureValuesMask: function () {
-      return "{category} ({size})";
+      options.orientation = model.orientation;
     }
-
-  }).implement(module.config);
+  })
+      .implement(module.config);
 });
