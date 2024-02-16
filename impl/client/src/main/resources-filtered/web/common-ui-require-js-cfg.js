@@ -1,5 +1,5 @@
 /*!
- * Copyright 2010 - 2023 Hitachi Vantara.  All rights reserved.
+ * Copyright 2010 - 2024 Hitachi Vantara.  All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -405,6 +405,12 @@
       "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Bubble"}
     }
   };
+  requireModules["pentaho/visual/models/Bullet"] = {
+    base: "pentaho/visual/models/Abstract",
+    annotations: {
+      "pentaho/visual/DefaultView": {module: "pentaho/ccc/visual/Bullet"}
+    }
+  };
   requireModules["pentaho/visual/models/Treemap"] = {
     base: "pentaho/visual/models/Abstract",
     annotations: {
@@ -473,6 +479,7 @@
   requireModules["pentaho/ccc/visual/Pie"] = {base: "pentaho/ccc/visual/Abstract"};
   requireModules["pentaho/ccc/visual/Donut"] = {base: "pentaho/ccc/visual/Pie"};
   requireModules["pentaho/ccc/visual/Treemap"] = {base: "pentaho/ccc/visual/Abstract"};
+  requireModules["pentaho/ccc/visual/Bullet"] = {base: "pentaho/ccc/visual/Abstract"};
 
   requireModules["pentaho/ccc/visual/MetricPointAbstract"] = {base: "pentaho/ccc/visual/CartesianAbstract"};
   requireModules["pentaho/ccc/visual/Scatter"] = {base: "pentaho/ccc/visual/MetricPointAbstract"};
@@ -803,6 +810,7 @@
       "pentaho/visual/models/Funnel",
       "pentaho/visual/models/Treemap",
       "pentaho/visual/models/HeatGrid",
+      "pentaho/visual/models/Bullet",
       "pentaho/visual/models/Line",
       "pentaho/visual/models/LineAbstract",
       "pentaho/visual/models/LineStacked",
@@ -850,6 +858,7 @@
       "pentaho/ccc/visual/BarStacked",
       "pentaho/ccc/visual/BarStackedHorizontal",
       "pentaho/ccc/visual/Boxplot",
+      "pentaho/ccc/visual/Bullet",
       "pentaho/ccc/visual/MetricPointAbstract",
       "pentaho/ccc/visual/Bubble",
       "pentaho/ccc/visual/Pie",

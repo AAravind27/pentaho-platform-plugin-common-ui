@@ -407,6 +407,15 @@
         }
       },
 
+       "pentaho/visual/models/Bullet": {
+        "base": "pentaho/visual/models/Abstract",
+        "annotations": {
+          "pentaho/visual/DefaultView": {
+            "module": "pentaho/ccc/visual/Bullet"
+          }
+        }
+      },
+
       "pentaho/visual/models/MetricPointAbstract": {
         "base": "pentaho/visual/models/CartesianAbstract"
       },
