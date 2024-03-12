@@ -85,6 +85,12 @@ define([
         data: categories,
         type: "scroll",
         align: "auto",
+        icon: 'circle',
+        orient: 'vertical',
+        right: '0',
+        top: '30',
+        itemWidth: 8,
+        itemHeight: 8,
         padding: 10,
         textStyle: {
           fontSize: font.substring(0, font.indexOf(" ")),
